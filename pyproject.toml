@@ -1,0 +1,12 @@
+[project]
+name = "panaec-engine"
+version = "0.1.0"
+description = "PanAEC Engine capability registry and runtime contracts."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "AGPL-3.0-only" }
+authors = [{ name = "潘永胜" }]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
