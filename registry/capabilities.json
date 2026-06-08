@@ -1,0 +1,76 @@
+{
+  "$schema": "../schemas/capability.schema.json",
+  "engine": {
+    "name": "PanAEC Engine",
+    "spdxLicense": "AGPL-3.0-only",
+    "copyright": "Copyright (C) 2026 潘永胜",
+    "copyrightOwner": "潘永胜",
+    "repository": "https://github.com/ActiveInAI/PanAEC-Engine"
+  },
+  "capabilities": [
+    {
+      "id": "bim_openbim",
+      "label": "BIM and openBIM",
+      "formats": ["ifc", "ifczip", "ids", "bcf", "cobie", "gbxml", "rvt", "rfa", "skp", "3dm"],
+      "boundary": "open formats direct; proprietary formats through lawful adapters",
+      "semanticTruthRequired": true
+    },
+    {
+      "id": "cad_geometry",
+      "label": "CAD and engineering geometry",
+      "formats": ["dwg", "dxf", "step", "stp", "iges", "igs", "brep", "stl", "obj", "ply", "pointcloud"],
+      "boundary": "direct where license-compatible; DWG and vendor formats through lawful adapters",
+      "semanticTruthRequired": true
+    },
+    {
+      "id": "pdf",
+      "label": "PDF",
+      "formats": ["pdf"],
+      "boundary": "bounded parser, renderer, OCR, annotation, and signature routes",
+      "semanticTruthRequired": true
+    },
+    {
+      "id": "office",
+      "label": "Office documents",
+      "formats": ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "odp"],
+      "boundary": "open parsers and document converters; macros disabled unless isolated",
+      "semanticTruthRequired": true
+    },
+    {
+      "id": "audio",
+      "label": "Audio",
+      "formats": ["wav", "mp3", "m4a", "aac", "flac", "ogg"],
+      "boundary": "metadata, transcription, diarization, and evidence routes",
+      "semanticTruthRequired": false
+    },
+    {
+      "id": "video",
+      "label": "Video",
+      "formats": ["mp4", "mov", "mkv", "webm", "avi"],
+      "boundary": "metadata, frame extraction, captions, segmentation, and evidence routes",
+      "semanticTruthRequired": false
+    },
+    {
+      "id": "images",
+      "label": "Images",
+      "formats": ["png", "jpg", "jpeg", "webp", "tif", "tiff", "bmp", "svg"],
+      "boundary": "metadata, OCR, segmentation, annotation, and derivative routes",
+      "semanticTruthRequired": false
+    },
+    {
+      "id": "archives",
+      "label": "Archives and decompression",
+      "formats": ["zip", "7z", "tar", "gz", "tgz", "rar"],
+      "boundary": "bounded listing and safe extraction with checksums",
+      "semanticTruthRequired": true
+    },
+    {
+      "id": "code_programming",
+      "label": "Code programming assets",
+      "formats": ["git", "py", "ts", "tsx", "js", "jsx", "rs", "go", "java", "cpp", "c", "h", "cs", "ipynb", "toml", "yaml", "yml", "json", "lock"],
+      "boundary": "AST parsing, dependency inspection, generation, validation, tests, and sandboxed execution only",
+      "semanticTruthRequired": true
+    }
+  ]
+}
+
