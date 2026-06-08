@@ -1,0 +1,25 @@
+PanAEC Engine
+
+Copyright (C) 2026 潘永胜
+
+PanAEC Engine is licensed under the GNU Affero General Public License version 3 only.
+SPDX-License-Identifier: AGPL-3.0-only
+
+Initial copyright owner:
+
+  潘永胜, individual person
+
+Repository hosting:
+
+  The public GitHub repository may be hosted under ActiveInAI. Repository hosting,
+  account administration, issue management, pull requests, mirrors, forks, package
+  distribution, and deployment do not transfer copyright ownership away from
+  潘永胜 unless a signed written copyright assignment explicitly says so.
+
+Contribution policy:
+
+  Contributions are accepted only under AGPL-3.0-only and the contribution rules
+  in CONTRIBUTING.md. If the maintainer requires single-owner copyright for a
+  change, the contributor must complete a separate signed copyright assignment
+  before the change is merged.
+
