@@ -6,6 +6,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -14,117 +16,38 @@ class Capability:
     label: str
 
 
-CAPABILITIES: tuple[Capability, ...] = (
-    Capability("bim_openbim", "BIM and openBIM"),
-    Capability("cad_geometry", "CAD and engineering geometry"),
-    Capability("pdf", "PDF"),
-    Capability("office", "Office documents"),
-    Capability("audio", "Audio"),
-    Capability("video", "Video"),
-    Capability("images", "Images"),
-    Capability("archives", "Archives and decompression"),
-    Capability("code_programming", "Code programming assets"),
-)
+REGISTRY_PATH = Path(__file__).resolve().parents[1] / "registry" / "capabilities.json"
 
-FORMAT_CAPABILITY_IDS: dict[str, str] = {
-    "3dm": "bim_openbim",
-    "3dtiles": "bim_openbim",
-    "7z": "archives",
-    "aac": "audio",
-    "avi": "video",
-    "b3dm": "bim_openbim",
-    "bcf": "bim_openbim",
-    "bmp": "images",
-    "brep": "cad_geometry",
-    "c": "code_programming",
-    "cmpt": "bim_openbim",
-    "cobie": "bim_openbim",
-    "cpp": "code_programming",
-    "cs": "code_programming",
-    "dng": "images",
-    "doc": "office",
-    "docx": "office",
-    "dwg": "cad_geometry",
-    "dxf": "cad_geometry",
-    "flac": "audio",
-    "gbxml": "bim_openbim",
-    "git": "code_programming",
-    "glb": "cad_geometry",
-    "gltf": "cad_geometry",
-    "go": "code_programming",
-    "gz": "archives",
-    "h": "code_programming",
-    "html": "code_programming",
-    "htm": "code_programming",
-    "ids": "bim_openbim",
-    "ifc": "bim_openbim",
-    "ifczip": "bim_openbim",
-    "iges": "cad_geometry",
-    "i3dm": "bim_openbim",
-    "igs": "cad_geometry",
-    "ipynb": "code_programming",
-    "java": "code_programming",
-    "jpeg": "images",
-    "jpg": "images",
-    "js": "code_programming",
-    "json": "code_programming",
-    "jsx": "code_programming",
-    "lock": "code_programming",
-    "m4a": "audio",
-    "mkv": "video",
-    "mov": "video",
-    "mp3": "audio",
-    "mp4": "video",
-    "obj": "cad_geometry",
-    "odb": "office",
-    "odg": "office",
-    "odp": "office",
-    "ods": "office",
-    "odt": "office",
-    "ofd": "pdf",
-    "ogg": "audio",
-    "pdf": "pdf",
-    "ply": "cad_geometry",
-    "png": "images",
-    "pnts": "bim_openbim",
-    "pointcloud": "cad_geometry",
-    "ppt": "office",
-    "pptx": "office",
-    "py": "code_programming",
-    "rar": "archives",
-    "raw": "images",
-    "rfa": "bim_openbim",
-    "rs": "code_programming",
-    "rvt": "bim_openbim",
-    "skp": "bim_openbim",
-    "stl": "cad_geometry",
-    "step": "cad_geometry",
-    "stp": "cad_geometry",
-    "svg": "images",
-    "tar": "archives",
-    "tgz": "archives",
-    "tif": "images",
-    "tiff": "images",
-    "toml": "code_programming",
-    "ts": "code_programming",
-    "tsx": "code_programming",
-    "txt": "code_programming",
-    "tileset.json": "bim_openbim",
-    "usd": "bim_openbim",
-    "usda": "bim_openbim",
-    "usdc": "bim_openbim",
-    "usdz": "bim_openbim",
-    "wav": "audio",
-    "webm": "video",
-    "webp": "images",
-    "xls": "office",
-    "xlsx": "office",
-    "xhtml": "code_programming",
-    "xml": "code_programming",
-    "yaml": "code_programming",
-    "yml": "code_programming",
-    "zip": "archives",
-}
+
+def _load_registry() -> dict:
+    return json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+
+
+def _capabilities_from_registry() -> tuple[Capability, ...]:
+    registry = _load_registry()
+    return tuple(
+        Capability(capability["id"], capability["label"])
+        for capability in registry["capabilities"]
+    )
+
+
+def _format_capability_ids_from_registry() -> dict[str, str]:
+    registry = _load_registry()
+    mapping: dict[str, str] = {}
+    for capability in registry["capabilities"]:
+        capability_id = capability["id"]
+        for format_id in capability["formats"]:
+            normalized = str(format_id).strip().lower().lstrip(".")
+            if not normalized:
+                continue
+            if normalized in mapping:
+                raise ValueError(f"Duplicate format in PanAEC registry: {normalized}")
+            mapping[normalized] = capability_id
+    return mapping
+
+
+CAPABILITIES: tuple[Capability, ...] = _capabilities_from_registry()
+FORMAT_CAPABILITY_IDS: dict[str, str] = _format_capability_ids_from_registry()
 
 
 def capability_ids() -> tuple[str, ...]:

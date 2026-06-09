@@ -3,11 +3,11 @@
 
 import json
 import unittest
-from pathlib import Path
 
 from panaec_engine import COPYRIGHT_OWNER, ENGINE_NAME, SPDX_LICENSE
 from panaec_engine.capabilities import (
     FORMAT_CAPABILITY_IDS,
+    REGISTRY_PATH,
     capability_id_for_extension,
     capability_id_for_filename,
     capability_ids,
@@ -21,7 +21,7 @@ class CapabilityTests(unittest.TestCase):
         self.assertEqual(COPYRIGHT_OWNER, "潘永胜")
 
     def test_registry_covers_required_domains(self) -> None:
-        registry = json.loads(Path("registry/capabilities.json").read_text())
+        registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
         ids = {capability["id"] for capability in registry["capabilities"]}
         self.assertEqual(set(capability_ids()), ids)
         self.assertEqual(
@@ -40,7 +40,7 @@ class CapabilityTests(unittest.TestCase):
         )
 
     def test_registry_covers_ofd_odf_raw_and_markup_formats(self) -> None:
-        registry = json.loads(Path("registry/capabilities.json").read_text())
+        registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
         formats_by_id = {
             capability["id"]: set(capability["formats"])
             for capability in registry["capabilities"]
@@ -104,6 +104,8 @@ class CapabilityTests(unittest.TestCase):
         expected = {
             "tileset.json": "bim_openbim",
             "city/tileset.json": "bim_openbim",
+            "city/TILESET.JSON": "bim_openbim",
+            "data.json": "code_programming",
             "model.glb": "cad_geometry",
             "source/index.xhtml": "code_programming",
             "notes.txt": "code_programming",
@@ -113,13 +115,22 @@ class CapabilityTests(unittest.TestCase):
                 self.assertEqual(capability_id_for_filename(filename), capability_id)
 
     def test_code_format_map_matches_registry_formats(self) -> None:
-        registry = json.loads(Path("registry/capabilities.json").read_text())
+        registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
         expected = {
             extension: capability["id"]
             for capability in registry["capabilities"]
             for extension in capability["formats"]
         }
         self.assertEqual(expected, FORMAT_CAPABILITY_IDS)
+
+    def test_registry_has_no_duplicate_formats(self) -> None:
+        registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+        formats = [
+            extension
+            for capability in registry["capabilities"]
+            for extension in capability["formats"]
+        ]
+        self.assertEqual(len(formats), len(set(formats)))
 
 
 if __name__ == "__main__":
