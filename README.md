@@ -22,8 +22,8 @@ PanAEC Engine covers these asset and workflow domains:
 
 - BIM and openBIM: IFC, IDS, BCF, COBie, gbXML, OpenUSD/USDZ, 3D Tiles, Revit/RVT through lawful adapters, SketchUp/SKP through lawful adapters, Rhino/3DM through lawful adapters, property sets, quantities, classifications, approvals, and audit trails.
 - CAD and engineering geometry: DWG, DXF, STEP, IGES, BREP, mesh, point cloud, drawing layers, blocks, dimensions, snapping, measurement, redlines, coordinates, and unit systems.
-- PDF: text extraction, page rendering, vector inspection, annotations, signatures, compliance review, drawing sheet indexing, and controlled OCR routes.
-- Office documents: Word, Excel, PowerPoint, OpenDocument, tables, formulas, tracked changes, comments, templates, and report generation.
+- PDF and fixed-layout documents: PDF and OFD source package reading, text extraction, page rendering, vector inspection, annotations, signatures, compliance review, drawing sheet indexing, and controlled OCR routes. OFD follows GB/T 33190-2016 and must not be silently replaced by PDF/image/OCR derivatives.
+- Office documents: Word, Excel, PowerPoint, OpenDocument (`.odt`, `.ods`, `.odp`, `.odg`, `.odb`), tables, formulas, tracked changes, comments, templates, and report generation.
 - Audio: transcription, diarization, translation, time-coded notes, meeting records, evidence packaging, and searchable metadata.
 - Video: keyframes, captions, scene segmentation, inspection records, progress evidence, safety review, and searchable metadata.
 - Images: raster inspection, EXIF metadata, OCR, segmentation, annotation, defect evidence, thumbnails, and controlled derivative generation.
@@ -33,6 +33,7 @@ PanAEC Engine covers these asset and workflow domains:
 ## Principles
 
 - Source-truth first: never claim semantic BIM, CAD, PDF, Office, media, archive, or code correctness from a visual fallback alone.
+- Native before derivative: source formats must be opened through source-bound runtimes or lawful adapters; PDF, image, OCR, HTML, GLB, IFC, or text exports must be labelled as derivatives.
 - Adapter boundaries: proprietary formats must route through lawful adapters, licensed sidecars, or user-provided conversion commands.
 - OpenBIM compatibility: BIM semantics must respect IFC, IDS, BCF, buildingSMART, and jurisdiction-specific professional standards.
 - Auditability: every derivative must preserve source file identity, route, adapter, unit, coordinate, checksum, timestamp, and reviewer state.
@@ -51,5 +52,6 @@ tests/                       Minimal validation tests
 
 ## Status
 
-This repository is the public PanAEC Engine starting point. It establishes the license, copyright owner, capability boundaries, and naming contract. Runtime implementations should be added as isolated modules with tests, schemas, and adapter license review.
+This repository is the public PanAEC Engine starting point. It establishes the license, copyright owner, capability boundaries, naming contract, and initial runtime contracts.
 
+The current source runtime includes a native OFD package reader that opens GB/T 33190-2016 source packages directly and exposes source XML page/text objects without creating PDF, image, OCR, text, or HTML derivatives. Full OFD digital seal validation and invoice semantics still require a dedicated OFD runtime adapter.

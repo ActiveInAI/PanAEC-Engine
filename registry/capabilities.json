@@ -24,16 +24,16 @@
     },
     {
       "id": "pdf",
-      "label": "PDF",
-      "formats": ["pdf"],
-      "boundary": "bounded parser, renderer, OCR, annotation, and signature routes",
+      "label": "PDF and fixed-layout documents",
+      "formats": ["pdf", "ofd"],
+      "boundary": "bounded source parser, renderer, annotation, and signature routes; OFD follows GB/T 33190-2016 source package rules",
       "semanticTruthRequired": true
     },
     {
       "id": "office",
       "label": "Office documents",
-      "formats": ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "odp"],
-      "boundary": "open parsers and document converters; macros disabled unless isolated",
+      "formats": ["doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "odp", "odg", "odb"],
+      "boundary": "Collabora WOPI is preferred for ODF native sessions; open parsers and document converters are adapter routes; macros disabled unless isolated",
       "semanticTruthRequired": true
     },
     {
@@ -53,7 +53,7 @@
     {
       "id": "images",
       "label": "Images",
-      "formats": ["png", "jpg", "jpeg", "webp", "tif", "tiff", "bmp", "svg"],
+      "formats": ["png", "jpg", "jpeg", "webp", "tif", "tiff", "bmp", "svg", "dng", "raw"],
       "boundary": "metadata, OCR, segmentation, annotation, and derivative routes",
       "semanticTruthRequired": false
     },
@@ -73,4 +73,3 @@
     }
   ]
 }
-

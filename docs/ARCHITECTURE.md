@@ -14,8 +14,8 @@ The engine covers nine top-level domains:
 
 1. BIM and openBIM
 2. CAD and engineering geometry
-3. PDF
-4. Office documents
+3. PDF and fixed-layout documents, including OFD
+4. Office documents, including ODF
 5. Audio
 6. Video
 7. Images
@@ -45,6 +45,15 @@ Source File
 - Every derivative declares source ID, adapter ID, unit system, coordinate system, schema version, timestamp, and validation state.
 - Browser preview is not semantic truth unless the registered route says it is.
 - Proprietary source formats need lawful adapters and must not be silently treated as open formats.
+- Native display routes must keep source package/object identity. Derivative routes must be labelled as derivative, export, thumbnail, index, OCR, or fallback.
+
+## OFD And ODF Contracts
+
+OFD support starts with GB/T 33190-2016 source-package inspection. The engine reads OFD package entries, document roots, page content XML, public resources, signatures, and text objects without creating a PDF/image/OCR derivative.
+
+ODF support includes `.odt`, `.ods`, `.odp`, `.odg`, and `.odb`. Online source-bound viewing/editing should prefer Collabora WOPI or another native OpenDocument runtime. LibreOffice CLI exports, PDF previews, images, and text extraction are derivative or batch routes, not native ODF display.
+
+Digital seal validation, electronic invoice semantics, and regulated submission readiness require dedicated standards adapters and cannot be inferred from source-package opening alone.
 
 ## Code Programming Boundary
 
@@ -59,4 +68,3 @@ It does not allow arbitrary unsandboxed execution. Any execution route must decl
 - secret policy
 - command allowlist
 - audit log location
-

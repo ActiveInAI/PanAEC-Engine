@@ -34,6 +34,16 @@ class CapabilityTests(unittest.TestCase):
             ids,
         )
 
+    def test_registry_covers_ofd_odf_and_raw_formats(self) -> None:
+        registry = json.loads(Path("registry/capabilities.json").read_text())
+        formats_by_id = {
+            capability["id"]: set(capability["formats"])
+            for capability in registry["capabilities"]
+        }
+        self.assertIn("ofd", formats_by_id["pdf"])
+        self.assertTrue({"odt", "ods", "odp", "odg", "odb"}.issubset(formats_by_id["office"]))
+        self.assertTrue({"dng", "raw"}.issubset(formats_by_id["images"]))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,9 +3,15 @@
 
 """Public identity constants for PanAEC Engine."""
 
+from .ofd_native import build_ofd_native_manifest
+
 ENGINE_NAME = "PanAEC Engine"
 SPDX_LICENSE = "AGPL-3.0-only"
 COPYRIGHT_OWNER = "潘永胜"
 
-__all__ = ["ENGINE_NAME", "SPDX_LICENSE", "COPYRIGHT_OWNER"]
-
+__all__ = [
+    "COPYRIGHT_OWNER",
+    "ENGINE_NAME",
+    "SPDX_LICENSE",
+    "build_ofd_native_manifest",
+]
