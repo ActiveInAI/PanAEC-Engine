@@ -11,15 +11,15 @@
     {
       "id": "bim_openbim",
       "label": "BIM and openBIM",
-      "formats": ["ifc", "ifczip", "ids", "bcf", "cobie", "gbxml", "rvt", "rfa", "skp", "3dm"],
-      "boundary": "open formats direct; proprietary formats through lawful adapters",
+      "formats": ["ifc", "ifczip", "ids", "bcf", "cobie", "gbxml", "usd", "usda", "usdc", "usdz", "3dtiles", "tileset.json", "b3dm", "i3dm", "pnts", "cmpt", "rvt", "rfa", "skp", "3dm"],
+      "boundary": "open formats direct; OpenUSD/USDZ and 3D Tiles as source-bound engineering scene routes; proprietary formats through lawful adapters",
       "semanticTruthRequired": true
     },
     {
       "id": "cad_geometry",
       "label": "CAD and engineering geometry",
-      "formats": ["dwg", "dxf", "step", "stp", "iges", "igs", "brep", "stl", "obj", "ply", "pointcloud"],
-      "boundary": "direct where license-compatible; DWG and vendor formats through lawful adapters",
+      "formats": ["dwg", "dxf", "step", "stp", "iges", "igs", "brep", "stl", "obj", "ply", "gltf", "glb", "pointcloud"],
+      "boundary": "direct where license-compatible; glTF/GLB are engineering scene or visual asset routes, not proof of BIM semantics; DWG and vendor formats through lawful adapters",
       "semanticTruthRequired": true
     },
     {
@@ -67,8 +67,8 @@
     {
       "id": "code_programming",
       "label": "Code programming assets",
-      "formats": ["git", "py", "ts", "tsx", "js", "jsx", "rs", "go", "java", "cpp", "c", "h", "cs", "ipynb", "toml", "yaml", "yml", "json", "lock"],
-      "boundary": "AST parsing, dependency inspection, generation, validation, tests, and sandboxed execution only",
+      "formats": ["git", "py", "ts", "tsx", "js", "jsx", "rs", "go", "java", "cpp", "c", "h", "cs", "ipynb", "toml", "yaml", "yml", "json", "xml", "html", "htm", "xhtml", "txt", "lock"],
+      "boundary": "AST and markup parsing, dependency inspection, generation, validation, source-native HTML/XML/text viewing and editing contracts, tests, and sandboxed execution only",
       "semanticTruthRequired": true
     }
   ]

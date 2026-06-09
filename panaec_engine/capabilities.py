@@ -28,13 +28,16 @@ CAPABILITIES: tuple[Capability, ...] = (
 
 FORMAT_CAPABILITY_IDS: dict[str, str] = {
     "3dm": "bim_openbim",
+    "3dtiles": "bim_openbim",
     "7z": "archives",
     "aac": "audio",
     "avi": "video",
+    "b3dm": "bim_openbim",
     "bcf": "bim_openbim",
     "bmp": "images",
     "brep": "cad_geometry",
     "c": "code_programming",
+    "cmpt": "bim_openbim",
     "cobie": "bim_openbim",
     "cpp": "code_programming",
     "cs": "code_programming",
@@ -46,13 +49,18 @@ FORMAT_CAPABILITY_IDS: dict[str, str] = {
     "flac": "audio",
     "gbxml": "bim_openbim",
     "git": "code_programming",
+    "glb": "cad_geometry",
+    "gltf": "cad_geometry",
     "go": "code_programming",
     "gz": "archives",
     "h": "code_programming",
+    "html": "code_programming",
+    "htm": "code_programming",
     "ids": "bim_openbim",
     "ifc": "bim_openbim",
     "ifczip": "bim_openbim",
     "iges": "cad_geometry",
+    "i3dm": "bim_openbim",
     "igs": "cad_geometry",
     "ipynb": "code_programming",
     "java": "code_programming",
@@ -78,6 +86,7 @@ FORMAT_CAPABILITY_IDS: dict[str, str] = {
     "pdf": "pdf",
     "ply": "cad_geometry",
     "png": "images",
+    "pnts": "bim_openbim",
     "pointcloud": "cad_geometry",
     "ppt": "office",
     "pptx": "office",
@@ -99,11 +108,19 @@ FORMAT_CAPABILITY_IDS: dict[str, str] = {
     "toml": "code_programming",
     "ts": "code_programming",
     "tsx": "code_programming",
+    "txt": "code_programming",
+    "tileset.json": "bim_openbim",
+    "usd": "bim_openbim",
+    "usda": "bim_openbim",
+    "usdc": "bim_openbim",
+    "usdz": "bim_openbim",
     "wav": "audio",
     "webm": "video",
     "webp": "images",
     "xls": "office",
     "xlsx": "office",
+    "xhtml": "code_programming",
+    "xml": "code_programming",
     "yaml": "code_programming",
     "yml": "code_programming",
     "zip": "archives",
@@ -119,3 +136,14 @@ def capability_id_for_extension(extension: str) -> str | None:
     if not normalized:
         return None
     return FORMAT_CAPABILITY_IDS.get(normalized)
+
+
+def capability_id_for_filename(filename: str) -> str | None:
+    normalized = filename.strip().lower().replace("\\", "/").rsplit("/", 1)[-1]
+    if not normalized:
+        return None
+    if normalized in FORMAT_CAPABILITY_IDS:
+        return FORMAT_CAPABILITY_IDS[normalized]
+    if "." not in normalized:
+        return FORMAT_CAPABILITY_IDS.get(normalized)
+    return capability_id_for_extension(normalized.rsplit(".", 1)[-1])

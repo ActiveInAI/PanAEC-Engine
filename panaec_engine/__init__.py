@@ -3,6 +3,7 @@
 
 """Public identity constants for PanAEC Engine."""
 
+from .markup_native import build_markup_native_manifest
 from .ofd_native import build_ofd_native_manifest
 
 ENGINE_NAME = "PanAEC Engine"
@@ -13,5 +14,6 @@ __all__ = [
     "COPYRIGHT_OWNER",
     "ENGINE_NAME",
     "SPDX_LICENSE",
+    "build_markup_native_manifest",
     "build_ofd_native_manifest",
 ]

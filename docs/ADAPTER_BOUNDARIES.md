@@ -10,11 +10,13 @@ PanAEC Engine separates open formats, browser-readable formats, proprietary form
 
 These may be parsed directly when the implementation and dependency licenses are compatible:
 
-- IFC, IDS, BCF, gbXML, CSV, JSON, XML, Markdown, plain text
+- IFC, IDS, BCF, gbXML, CSV, JSON, XML, HTML/XHTML, Markdown, plain text
 - ODF source packages: ODT, ODS, ODP, ODG, and ODB through source-bound office runtimes such as Collabora WOPI
 - OFD source packages according to GB/T 33190-2016 for package, document, page, resource, text-object, and signature manifest inspection
-- GLB/glTF when used as visual or derivative output
-- OpenUSD/USDZ when a compatible runtime is available
+- XML, HTML, XHTML, and TXT source files through source-bound markup/text readers and editors
+- GLB/glTF when uploaded as source engineering scene assets or when clearly labelled as visual/derivative output
+- OpenUSD/USD/USDA/USDC/USDZ when a compatible runtime is available
+- 3D Tiles through `tileset.json`, B3DM, I3DM, PNTS, and CMPT source-bound scene routes
 - ZIP and other archives only through bounded safe extraction
 - Common image, audio, and video metadata through compatible parsers
 
@@ -30,6 +32,8 @@ Required rules:
 - ODF native display must read the OpenDocument source package. ODT, ODS, ODP, ODG, and ODB should prefer Collabora WOPI or another source-bound office runtime.
 - Missing native runtime, sidecar, licensed adapter, or browser engine must be reported as unavailable, adapter-required, blocked, or failed.
 - A derivative preview must never be named or reported as source-native support.
+- `tileset.json` must be routed as 3D Tiles, not generic JSON, when it is the root tileset manifest.
+- glTF/GLB can be native only when the uploaded source is glTF/GLB. A glTF/GLB output created from IFC, RVT, SKP, 3DM, DWG, USD, or another upstream file is a derivative.
 
 ## Licensed Or External Adapter Routes
 

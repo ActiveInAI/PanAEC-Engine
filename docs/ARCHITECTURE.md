@@ -55,9 +55,15 @@ ODF support includes `.odt`, `.ods`, `.odp`, `.odg`, and `.odb`. Online source-b
 
 Digital seal validation, electronic invoice semantics, and regulated submission readiness require dedicated standards adapters and cannot be inferred from source-package opening alone.
 
+## Engineering Scene Assets
+
+OpenUSD source formats include `.usd`, `.usda`, `.usdc`, and `.usdz`. 3D Tiles source routes include `tileset.json`, `.3dtiles`, `.b3dm`, `.i3dm`, `.pnts`, and `.cmpt`. These are source-bound engineering scene routes when the original uploaded file is one of these formats.
+
+glTF and GLB are registered as CAD/engineering geometry scene assets. They may be native source files, visual exchange outputs, or controlled derivatives depending on the source record. A GLB or glTF derivative must not be reported as semantic BIM truth for an IFC, RVT, SKP, 3DM, DWG, or other upstream source.
+
 ## Code Programming Boundary
 
-Code-programming support includes repository indexing, source parsing, dependency manifest reading, generated SDKs, scripts, notebooks, static analysis, code review evidence, test reports, and sandboxed execution.
+Code-programming support includes repository indexing, source parsing, XML/HTML/XHTML/TXT source reading, dependency manifest reading, generated SDKs, scripts, notebooks, static analysis, code review evidence, test reports, and sandboxed execution.
 
 It does not allow arbitrary unsandboxed execution. Any execution route must declare:
 
