@@ -1,0 +1,168 @@
+{
+  "$schema": "../schemas/tool.schema.json",
+  "engine": {
+    "name": "PanAEC Engine",
+    "spdxLicense": "AGPL-3.0-only",
+    "copyright": "Copyright (C) 2026 潘永胜",
+    "copyrightOwner": "潘永胜",
+    "repository": "https://github.com/ActiveInAI/PanAEC-Engine"
+  },
+  "namespaceNote": "Tool ABI keeps the ARCHITOKEN_* environment variables and architoken.* report schema identifiers of the authorized first-party integration. The public command contract is the panaec-* CLI names.",
+  "tools": [
+    {
+      "id": "dwg_to_ifc",
+      "command": "tools/panaec-dwg-to-ifc",
+      "implementation": "tools/architoken_dwg_to_ifc.py",
+      "inputs": ["dwg"],
+      "outputs": ["ifc"],
+      "route": "adapter",
+      "runtime": ["python3", "ifcopenshell", "LibreDWG dwgread (JSON dump)"],
+      "summary": "DWG geometry through the LibreDWG native JSON dump into a real IFC4 geometry exchange file. The IFC output is a derivative; the DWG stays source of record."
+    },
+    {
+      "id": "dxf_to_ifc",
+      "command": "tools/panaec-dxf-to-ifc",
+      "implementation": "tools/architoken_dxf_to_ifc.py",
+      "inputs": ["dxf"],
+      "outputs": ["ifc"],
+      "route": "direct",
+      "runtime": ["python3", "ezdxf", "ifcopenshell"],
+      "summary": "DXF 3D entities into IfcTriangulatedFaceSet exchange geometry with SJG 157 layer-name classification. Pure 2D drawings are reported honestly as non-convertible, never faked into 3D."
+    },
+    {
+      "id": "cad_to_ifc",
+      "command": "tools/panaec-cad-to-ifc",
+      "implementation": "tools/architoken_cad_to_ifc.py",
+      "inputs": ["step", "stp", "iges", "igs", "stl"],
+      "outputs": ["ifc"],
+      "route": "adapter",
+      "runtime": ["FreeCAD freecadcmd (OCCT)"],
+      "summary": "STEP/IGES/STL into real-geometry IFC4 through FreeCAD/OCCT."
+    },
+    {
+      "id": "threedm_to_ifc",
+      "command": "tools/panaec-3dm-to-ifc",
+      "implementation": "tools/architoken_3dm_to_ifc.py",
+      "inputs": ["3dm"],
+      "outputs": ["ifc"],
+      "route": "direct",
+      "runtime": ["python3", "rhino3dm", "ifcopenshell"],
+      "summary": "Rhino/OpenNURBS 3DM meshable geometry into IFC4 tessellated exchange objects, upgraded to real IFC types by component name where the SJG 157 dictionary matches."
+    },
+    {
+      "id": "skp_to_ifc",
+      "command": "tools/panaec-skp-to-ifc",
+      "implementation": "tools/architoken_skp_sidecar_client.py",
+      "inputs": ["skp"],
+      "outputs": ["ifc"],
+      "route": "licensed-sidecar",
+      "runtime": ["python3", "user-provided licensed SketchUp sidecar over HTTP"],
+      "summary": "SketchUp SKP through a lawful licensed sidecar adapter. No reverse engineering; the sidecar endpoint is user-provided configuration."
+    },
+    {
+      "id": "skp_to_glb",
+      "command": "tools/panaec-skp-to-glb",
+      "implementation": "tools/architoken_skp_sidecar_client.py",
+      "inputs": ["skp"],
+      "outputs": ["glb"],
+      "route": "licensed-sidecar",
+      "runtime": ["python3", "user-provided licensed SketchUp sidecar over HTTP"],
+      "summary": "SketchUp SKP to GLB visual derivative through the same lawful sidecar adapter. The GLB is a labelled derivative, not proof of BIM semantics."
+    },
+    {
+      "id": "ifc_to_bom",
+      "command": "tools/panaec-ifc-to-bom",
+      "implementation": "tools/architoken_ifc_to_bom.py",
+      "inputs": ["ifc"],
+      "outputs": ["json", "csv"],
+      "route": "direct",
+      "runtime": ["python3", "ifcopenshell (geom)", "numpy"],
+      "schema": "architoken.model_bom_manifest.v1",
+      "summary": "IFC bill of materials with measured geometry quantities for building components (walls, slabs, doors, windows, stairs, roofs, finishes) and SJG 157 semantic codes."
+    },
+    {
+      "id": "step_to_bom",
+      "command": "tools/panaec-step-to-bom",
+      "implementation": "tools/architoken_step_to_bom.py",
+      "inputs": ["step", "stp", "iges", "igs"],
+      "outputs": ["json", "csv"],
+      "route": "adapter",
+      "runtime": ["FreeCAD freecadcmd (OCCT)"],
+      "schema": "architoken.model_bom_manifest.v1",
+      "summary": "STEP/IGES bill of materials through FreeCAD/OCCT shape inspection."
+    },
+    {
+      "id": "drawing_to_bom",
+      "command": "tools/panaec-drawing-to-bom",
+      "implementation": "tools/architoken_dxf_to_bom.py",
+      "inputs": ["dxf", "dwg"],
+      "outputs": ["json", "csv"],
+      "route": "adapter",
+      "runtime": ["python3", "ezdxf", "LibreDWG dwg2dxf for DWG input"],
+      "schema": "architoken.model_bom_manifest.v1",
+      "summary": "Drawing block-reference quantity takeoff with SJG 157 semantics; DWG input passes through a real LibreDWG conversion first."
+    },
+    {
+      "id": "pdf_to_bom",
+      "command": "tools/panaec-pdf-to-bom",
+      "implementation": "tools/architoken_pdf_to_bom.py",
+      "inputs": ["pdf"],
+      "outputs": ["json", "csv"],
+      "route": "direct",
+      "runtime": ["python3", "pdfplumber"],
+      "schema": "architoken.model_bom_manifest.v1",
+      "summary": "PDF drawing-sheet schedules exported verbatim from vector text tables, with page and table provenance. Scanned PDFs without vector text are reported honestly as having no extractable tables."
+    },
+    {
+      "id": "usd_to_bom",
+      "command": "tools/panaec-usd-to-bom",
+      "implementation": "tools/architoken_usd_to_bom.mjs",
+      "inputs": ["usd", "usda", "usdc", "usdz"],
+      "outputs": ["json", "csv"],
+      "route": "direct",
+      "runtime": ["node", "three.js USDLoader/USDZLoader"],
+      "schema": "architoken.model_bom_manifest.v1",
+      "summary": "OpenUSD scene bill of materials through the same three.js USD parser used by the source viewer, grouping instances by geometry data blocks with bounding boxes."
+    },
+    {
+      "id": "ifc_enrich",
+      "command": "tools/panaec-ifc-enrich",
+      "implementation": "tools/ifc_semantic_enrich.py",
+      "inputs": ["ifc"],
+      "outputs": ["ifc"],
+      "route": "direct",
+      "runtime": ["python3", "ifcopenshell"],
+      "summary": "Upgrades IfcBuildingElementProxy objects to real IFC entity types by component name and attaches SJG 157-2024 classification references, preserving GlobalIds."
+    },
+    {
+      "id": "ifc_validate",
+      "command": "tools/panaec-ifc-validate",
+      "implementation": "tools/architoken_ifc_validate.py",
+      "inputs": ["ifc"],
+      "outputs": ["json"],
+      "route": "direct",
+      "runtime": ["python3", "ifcopenshell.validate"],
+      "schema": "architoken.ifc_validation_report.v1",
+      "summary": "Local IFC schema/EXPRESS rule validation with a structured passed/failed report. No external service dependency."
+    },
+    {
+      "id": "ifc_edit",
+      "command": "tools/panaec-ifc-edit",
+      "implementation": "tools/architoken_ifc_edit.py",
+      "inputs": ["ifc"],
+      "outputs": ["ifc", "json"],
+      "route": "direct",
+      "runtime": ["python3", "ifcopenshell"],
+      "schema": "architoken.ifc_edit_report.v1",
+      "summary": "Atomic source IFC attribute and property-set editing with a whitelist of direct attributes. Any single failed operation fails the whole edit; no partial writes."
+    }
+  ],
+  "data": [
+    {
+      "id": "sjg157_semantic_dictionary",
+      "path": "data/sjg157_semantic_dictionary.json",
+      "summary": "SJG 157-2024 semantic dictionary: component-name and layer-name substring rules mapped to IFC entity types, SJG component codes, and category names. Single source of truth shared by the BOM and IFC enrichment tools.",
+      "classifier": "tools/sjg157_classify.py"
+    }
+  ]
+}

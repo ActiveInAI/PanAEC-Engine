@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 潘永胜
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKER_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${ARCHITOKEN_WORKER_PYTHON:-${WORKER_DIR}/.venv/bin/python}"
+[ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
+
+exec "${PYTHON_BIN}" "${SCRIPT_DIR}/architoken_dwg_to_ifc.py" "$@"

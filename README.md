@@ -46,10 +46,13 @@ PanAEC Engine covers these asset and workflow domains:
 
 ```text
 panaec_engine/               Minimal Python package and public constants
+tools/                       panaec-* CLI toolchain: conversion, BOM, enrichment, validation, editing
+data/                        SJG 157-2024 semantic dictionary (single source of truth)
 registry/capabilities.json   Capability registry for supported domains
+registry/tools.json          Tool registry: commands, routes, runtimes, report schemas
 schemas/                     JSON Schemas for registries and contracts
-docs/                        Architecture and adapter boundary documents
-tests/                       Minimal validation tests
+docs/                        Architecture, adapter boundary, and toolchain documents
+tests/                       Validation tests (heavy runtimes auto-skip when absent)
 ```
 
 ## Status
@@ -59,3 +62,5 @@ This repository is the public PanAEC Engine starting point. It establishes the l
 The current source runtime includes a native OFD package reader that opens GB/T 33190-2016 source packages directly and exposes source XML page/text objects without creating PDF, image, OCR, text, or HTML derivatives. Full OFD digital seal validation and invoice semantics still require a dedicated OFD runtime adapter.
 
 The current source runtime also includes a native XML/HTML/XHTML/TXT source reader. It reads source bytes, checksum, encoding, structure, links, titles, and text previews directly without creating PDF, image, OCR, HTML, or text derivatives.
+
+The repository now also ships the PanAEC conversion and quantity toolchain under `tools/`, registered in `registry/tools.json` and documented in `docs/TOOLCHAIN.md`: real-geometry conversion to IFC4 from DWG (LibreDWG native JSON route), DXF, STEP/IGES/STL (FreeCAD/OCCT), Rhino 3DM, and SketchUp SKP (licensed sidecar); measured-quantity bill of materials from IFC, STEP/IGES, DXF/DWG drawings, PDF drawing sheets, and OpenUSD scenes; SJG 157-2024 semantic classification with proxy-to-real-type IFC enrichment; and local IFC validation and atomic IFC editing with structured reports.

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 潘永胜
+# panaec-usd-to-bom <input.usd|.usda|.usdc|.usdz> <output.json> [--csv-dir DIR] [--name NAME]
+# three.js USDLoader/USDZLoader(与文件查看器同一解析器)在 Node 原生解析。
+# 注:官方 usd-core 无 aarch64 轮子,qemu 模拟会段错误,故采用同源 JS 解析器。
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FRONTEND_DIR="${ARCHITOKEN_FRONTEND_DIR:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
+
+input="$(realpath "${1:?usage: panaec-usd-to-bom <input> <output.json> ...}")"
+output="$(realpath -m "${2:?usage: panaec-usd-to-bom <input> <output.json> ...}")"
+shift 2
+
+cd "$FRONTEND_DIR"
+exec node "${SCRIPT_DIR}/architoken_usd_to_bom.mjs" "$input" "$output" "$@"

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 潘永胜
+# panaec-cad-to-ifc <input.step|.stp|.iges|.igs|.stl> <output.ifc> [--name NAME]
+# STEP/IGES/STL → 真实几何 IFC4(FreeCAD/OCCT)。freecadcmd 位置参数会被当文档,
+# 故经环境变量传参;snap freecad 看不到 /tmp,用可见暂存区。
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FREECAD_BIN="${FREECAD_CMD_BIN:-/snap/bin/freecad.cmd}"
+
+input="${1:?usage: panaec-cad-to-ifc <input> <output.ifc> [--name NAME]}"
+output="${2:?usage: panaec-cad-to-ifc <input> <output.ifc> [--name NAME]}"
+shift 2
+name=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --name) name="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+
+STAGE_ROOT="${ARCHITOKEN_CAD_IFC_STAGE_ROOT:-${HOME}/.cache/panaec/runtime-stage}"
+mkdir -p "$STAGE_ROOT"
+stage="$(mktemp -d "$STAGE_ROOT/cad-ifc-XXXXXX")"
+trap 'rm -rf "$stage"' EXIT
+src_in_stage="$stage/$(basename "$input")"
+cp "$(realpath "$input")" "$src_in_stage"
+
+ARCHITOKEN_IFC_INPUT="$src_in_stage" \
+ARCHITOKEN_IFC_OUTPUT="$stage/model.ifc" \
+ARCHITOKEN_IFC_NAME="$name" \
+"$FREECAD_BIN" "${SCRIPT_DIR}/architoken_cad_to_ifc.py" 2> >(grep -viE "snap-specific|PYTHONPATH" >&2)
+
+[ -s "$stage/model.ifc" ]
+head -c 14 "$stage/model.ifc" | grep -q "ISO-10303-21"
+mkdir -p "$(dirname "$(realpath -m "$output")")"
+cp "$stage/model.ifc" "$(realpath -m "$output")"

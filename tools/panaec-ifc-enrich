@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 潘永胜
+# panaec-ifc-enrich <in.ifc> <out.ifc>
+# 给 IFC 补 SJG 157 分类并把命中的 Proxy 升级为真实 IFC 类型。
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKER_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${ARCHITOKEN_WORKER_PYTHON:-${WORKER_DIR}/.venv/bin/python}"
+[ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
+
+if [[ ! -x "${PYTHON_BIN}" ]]; then
+  PYTHON_BIN="${PYTHON:-python3}"
+fi
+
+exec "${PYTHON_BIN}" "${SCRIPT_DIR}/architoken_ifc_enrich.py" "$@"

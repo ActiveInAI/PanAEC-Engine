@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 潘永胜
+# panaec-step-to-bom <input.step|.stp|.iges|.igs> <output.json> [--csv-dir DIR] [--name NAME]
+# freecadcmd 会把位置参数当文档打开,因此经环境变量传给脚本。
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FREECAD_BIN="${FREECAD_CMD_BIN:-/snap/bin/freecad.cmd}"
+
+input="${1:?usage: panaec-step-to-bom <input> <output.json> [--csv-dir DIR] [--name NAME]}"
+output="${2:?usage: panaec-step-to-bom <input> <output.json> [--csv-dir DIR] [--name NAME]}"
+shift 2
+csv_dir=""
+name=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --csv-dir) csv_dir="$2"; shift 2 ;;
+    --name) name="$2"; shift 2 ;;
+    *) shift ;;
+  esac
+done
+
+# snap 的 freecad 看不到真实 /tmp(私有挂载),输入/输出经家目录真实路径暂存
+# snap home 接口不允许读家目录顶层点目录(~/.architoken),暂存区必须是可见路径
+STAGE_ROOT="${ARCHITOKEN_STEP_BOM_STAGE_ROOT:-${HOME}/.cache/panaec/runtime-stage}"
+mkdir -p "$STAGE_ROOT"
+stage="$(mktemp -d "$STAGE_ROOT/step-bom-XXXXXX")"
+trap 'rm -rf "$stage"' EXIT
+src_in_stage="$stage/$(basename "$input")"
+cp "$(realpath "$input")" "$src_in_stage"
+
+ARCHITOKEN_BOM_INPUT="$src_in_stage" \
+ARCHITOKEN_BOM_OUTPUT="$stage/manifest.json" \
+ARCHITOKEN_BOM_CSV_DIR="$stage/csv" \
+ARCHITOKEN_BOM_NAME="$name" \
+"$FREECAD_BIN" "${SCRIPT_DIR}/architoken_step_to_bom.py" 2> >(grep -viE "snap-specific|PYTHONPATH" >&2)
+
+[ -s "$stage/manifest.json" ]
+mkdir -p "$(dirname "$(realpath -m "$output")")"
+cp "$stage/manifest.json" "$(realpath -m "$output")"
+if [ -n "$csv_dir" ]; then
+  mkdir -p "$(realpath -m "$csv_dir")"
+  cp "$stage"/csv/*.csv "$(realpath -m "$csv_dir")/" 2>/dev/null || true
+fi

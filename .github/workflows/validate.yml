@@ -12,7 +12,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Validate JSON registry
-        run: python3 -m json.tool registry/capabilities.json >/dev/null
+      - name: Validate JSON registries and schemas
+        run: |
+          for f in registry/*.json schemas/*.json data/*.json; do
+            python3 -m json.tool "$f" >/dev/null
+          done
       - name: Run Python tests
         run: python3 -m unittest discover -s tests -p 'test_*.py'

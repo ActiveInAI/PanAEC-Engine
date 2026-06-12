@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ActiveInAI/PanAEC-Engine/schemas/tool.schema.json",
+  "title": "PanAEC Engine Tool Registry",
+  "type": "object",
+  "required": ["engine", "tools"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "engine": {
+      "type": "object",
+      "required": ["name", "spdxLicense", "copyright", "copyrightOwner", "repository"],
+      "properties": {
+        "name": { "const": "PanAEC Engine" },
+        "spdxLicense": { "const": "AGPL-3.0-only" },
+        "copyright": { "type": "string", "minLength": 1 },
+        "copyrightOwner": { "const": "潘永胜" },
+        "repository": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+    "namespaceNote": { "type": "string" },
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "command", "implementation", "inputs", "outputs", "route", "runtime", "summary"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "command": { "type": "string", "pattern": "^tools/panaec-[a-z0-9-]+$" },
+          "implementation": { "type": "string", "pattern": "^tools/" },
+          "inputs": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "outputs": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "route": { "enum": ["direct", "adapter", "licensed-sidecar"] },
+          "runtime": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "schema": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "summary"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "path": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "classifier": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

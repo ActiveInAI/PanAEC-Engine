@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 潘永胜
+# panaec-drawing-to-bom <input.dxf|.dwg> <output.json> [--csv-dir DIR] [--name NAME]
+# DWG 先经 LibreDWG dwg2dxf 真实转换,再走 ezdxf 块引用统计。
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKER_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${ARCHITOKEN_WORKER_PYTHON:-${WORKER_DIR}/.venv/bin/python}"
+[ -x "$PYTHON_BIN" ] || PYTHON_BIN="$(command -v python3)"
+LIBREDWG_DIR="${LIBREDWG_BIN_DIR:-}"
+
+input="${1:?usage: panaec-drawing-to-bom <input.dxf|.dwg> <output.json> ...}"
+shift
+
+case "${input,,}" in
+  *.dwg)
+    work="$(mktemp -d /tmp/drawing-bom-XXXXXX)"
+    trap 'rm -rf "$work"' EXIT
+    "${LIBREDWG_DIR:+$LIBREDWG_DIR/}dwg2dxf" -o "$work/converted.dxf" "$input" 1>&2
+    [ -s "$work/converted.dxf" ]
+    exec "$PYTHON_BIN" "${SCRIPT_DIR}/architoken_dxf_to_bom.py" "$work/converted.dxf" "$@"
+    ;;
+  *)
+    exec "$PYTHON_BIN" "${SCRIPT_DIR}/architoken_dxf_to_bom.py" "$input" "$@"
+    ;;
+esac
